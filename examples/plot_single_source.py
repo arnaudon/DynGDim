@@ -29,7 +29,7 @@ t_min = -4.5
 t_max = 1.0
 n_t = 2000
 
-id_0 = int(len(graph) / 3)
+id_0 = len(graph) // 3
 
 times = np.logspace(t_min, t_max, n_t)
 

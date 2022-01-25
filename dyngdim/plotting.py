@@ -87,12 +87,11 @@ def plot_single_source(
     plt.yscale("log")
 
     def f(d):
-        f = (
+        return (
             results["times"] ** (-d / 2.0)
             * np.exp(-d / 2.0)
             / (4.0 * results["diffusion_coefficient"] * np.pi) ** (0.5 * d)
         )
-        return f
 
     for d in ds:
         ax2.plot(results["times"], f(d), "--", lw=2, label=r"$d_{rel} =$" + str(d))

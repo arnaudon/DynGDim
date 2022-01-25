@@ -64,7 +64,7 @@ def run_single_source(graph, times, initial_measure, use_spectral_gap=True):
         diffusion_coefficient,
     ) = extract_relative_dimensions(times, node_trajectories, initial_measure, spectral_gap)
 
-    results = {
+    return {
         "relative_dimensions": relative_dimensions,
         "peak_amplitudes": peak_amplitudes,
         "peak_times": peak_times,
@@ -72,8 +72,6 @@ def run_single_source(graph, times, initial_measure, use_spectral_gap=True):
         "times": times,
         "node_trajectories": node_trajectories,
     }
-
-    return results
 
 
 def run_local_dimension(graph, times, use_spectral_gap=True, n_workers=1, nodes=None):
@@ -108,15 +106,13 @@ def compute_global_dimension(local_dimensions):
 
 def construct_laplacian(graph, laplacian_tpe="normalized", use_spectral_gap=True):
     """construct the Laplacian matrix"""
-    if laplacian_tpe == "normalized":
-        degrees = np.array([graph.degree(i, weight="weight") for i in graph.nodes])
-        laplacian = sc.sparse.diags(1.0 / degrees).dot(nx.laplacian_matrix(graph))
-        # laplacian = nx.laplacian_matrix(graph).dot(sc.sparse.diags(1.0 / degrees))
-    else:
+    if laplacian_tpe != "normalized":
         raise Exception(
             "Any other laplacian type than normalized are not implemented as they will not work"
         )
 
+    degrees = np.array([graph.degree(i, weight="weight") for i in graph.nodes])
+    laplacian = sc.sparse.diags(1.0 / degrees).dot(nx.laplacian_matrix(graph))
     if use_spectral_gap:
         spectral_gap = abs(sc.sparse.linalg.eigs(laplacian, which="SM", k=2)[0][1])
         laplacian /= spectral_gap

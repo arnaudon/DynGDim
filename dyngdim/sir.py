@@ -186,10 +186,7 @@ def plot_analysis(folder, vmin=0.7, with_beta_crit=False, with_chi=False):
     times, betas, beta_crit_eig, beta_crit_deg, corr_scan, chis, infects = pickle.load(
         open(f"{folder}/corr_scan.pkl", "rb")
     )
-    best = []
-    for row in corr_scan:
-        best.append(times[np.argmax(row)])
-
+    best = [times[np.argmax(row)] for row in corr_scan]
     plt.figure(figsize=(5, 2))
     plt.pcolormesh(
         times[::5], betas, np.array(corr_scan)[:, ::5], cmap="YlOrBr", shading="nearest", vmin=vmin
